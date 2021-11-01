@@ -71,14 +71,19 @@ const login = (req, res, next) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
-
-      return res.send({ token });
+      const token = jwt.sign(
+        // передаем в пейлоуд айди юзера и подпись
+        { _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret', { expiresIn: '7d' },
+      );
+      res.cookie('jwt', token, {
+        httpOnly: true,
+        sameSite: 'None',
+        secure: true,
+      }).end(res.send({ message: 'Записано.' }));
+      // console.log(res.cookie);
+      // .send({ token });
     })
-    .catch(() => {
-      throw new AuthError("Неверный пароль или почта.");
-    })
-    .catch(next);
+    .catch(() => next(new AuthError('Неверный логин либо пароль')));
 };
 
 
