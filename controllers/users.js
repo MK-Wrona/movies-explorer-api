@@ -73,7 +73,7 @@ const login = (req, res, next) => {
         // httpOnly: true,
         // sameSite: 'None',
         // secure: true,
-      }).res.send({ message: 'Вы успешно залогинились.' });
+      }).status(200).send({ message: 'Вы успешно залогинились.' });
       // console.log(res.cookie);
       // .send({ token });
     })
