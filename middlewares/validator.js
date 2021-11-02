@@ -8,49 +8,58 @@ const validateObjId = celebrate({
       if (ObjectId.isValid(value)) {
         return value;
       }
-      return helpers.message('Невалидный id');
+      return helpers.message('Некорректный ID.');
     }),
   }),
 });
 
 const validateUserBody = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    email: Joi.string().required().custom((value, helpers) => {
-      if (validator.matches(value, /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
-        return value;
-      }
-      return helpers.message('Невалидный email');
-    }),
-    password: Joi.string().required(),
+    email: Joi.string().required().email()
+      .message('Поле "email" не валидно.')
+      .messages({
+        'string.required': 'Поле "email" не должно быть пустым.',
+      }),
+    password: Joi.string().required().min(5)
+      .messages({
+        'any.required': 'Поле "password" не должно быть пустым.',
+      }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'any.required': 'Поле "name" не должно быть пустым.',
+      }),
   }),
 });
 
 const validateProfileBody = celebrate({
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30).required(),
-    email: Joi.string().required().custom((value, helpers) => {
-      if (validator.matches(value, /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
-        return value;
-      }
-      return helpers.message('Невалидный email');
-    }),
+    email: Joi.string().required().email()
+      .message('Поле "email" не валидно.')
+      .messages({
+        'string.required': 'Поле "email" не должно быть пустым.',
+      }),
+    name: Joi.string().required().min(2).max(30)
+      .messages({
+        'any.required': 'Поле "name" не должно быть пустым.',
+      }),
   }),
 });
 
-const validateAuthentication = celebrate({
+const validateLogin = celebrate({
   body: Joi.object().keys({
-    email: Joi.string().required().custom((value, helpers) => {
-      if (validator.matches(value, /[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/)) {
-        return value;
-      }
-      return helpers.message('Невалидный email');
-    }),
-    password: Joi.string().required(),
+    email: Joi.string().required().email()
+      .message('Поле "email" не валидно.')
+      .messages({
+        'string.required': 'Поле "email" не должно быть пустым.',
+      }),
+    password: Joi.string().required().min(5)
+      .messages({
+        'any.required': 'Поле "password" не должно быть пустым.',
+      }),
   }),
 });
 
-const validateMovieBody = celebrate({
+const validateMovie = celebrate({
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
@@ -61,13 +70,13 @@ const validateMovieBody = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Невалидный url изображения');
+      return helpers.message('Некорректная ссылка.');
     }),
     trailer: Joi.string().required().custom((value, helpers) => {
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Невалидный url трейлера');
+      return helpers.message('Некорректная ссылка.');
     }),
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
@@ -75,7 +84,7 @@ const validateMovieBody = celebrate({
       if (validator.isURL(value)) {
         return value;
       }
-      return helpers.message('Невалидный thumbnail url');
+      return helpers.message('Некорректная ссылка.');
     }),
     movieId: Joi.number().required(),
   }),
@@ -85,6 +94,6 @@ module.exports = {
   validateObjId,
   validateUserBody,
   validateProfileBody,
-  validateAuthentication,
-  validateMovieBody,
+  validateLogin,
+  validateMovie,
 };

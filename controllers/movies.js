@@ -55,23 +55,23 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  const { _id } = req.params;
-  Movie.findById(_id)
-    .orFail(() => new NotFoundError('Карточка с фильмом не найдена'))
+  Movie.findById(req.params._id)
+    .orFail(new NotFoundError('Фильм с указанным _id не найден'))
     .then((movie) => {
-      if (JSON.stringify(req.user._id) === JSON.stringify(movie.owner)) {
-        Movie.findByIdAndRemove(_id)
-          .then((result) => {
-            res.send(result);
-          });
-      } else {
-        throw new AccessDeniedError('Вы не обладаете достаточными правами для удаления фильма.');
+      if (req.user._id.toString() === movie.owner.toString()) {
+        return movie.remove()
+          .then(() => res.send(movie));
       }
+      return next(new AccessDeniedError('Нельзя удалять чужие фильмы'));
     })
-    .catch(next);
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new DataError('Некорректный формат _id фильма'));
+      } else {
+        next(err);
+      }
+    });
 };
-
-
 
 module.exports = {
   getMovies, createMovie, deleteMovie,

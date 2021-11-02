@@ -1,18 +1,17 @@
 const movieRouter = require('express').Router();
-const { celebrate, Joi } = require('celebrate');
 const {
-  getMovies, createMovie, deleteMovie
+  getMovies, createMovie, deleteMovie,
 } = require('../controllers/movies');
-const { validateObjId, validateMovieBody } = require('../middlewares/validator');
+const { validateObjId, validateMovie } = require('../middlewares/validator');
 
 // руты для карточек\лойсов
 
-movieRouter.get('/movies/', getMovies);
+movieRouter.get('/', getMovies);
 
-movieRouter.post('/movies/',
-validateMovieBody,
-createMovie);
+movieRouter.post('/',
+  validateMovie,
+  createMovie);
 
-movieRouter.delete('/movies/:_id', validateObjId, deleteMovie);
+movieRouter.delete('/:_id', validateObjId, deleteMovie);
 
 module.exports = movieRouter;

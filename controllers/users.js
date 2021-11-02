@@ -2,15 +2,13 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
+const { NODE_ENV, JWT_SECRET } = process.env;
+
 const DataError = require('../errors/data_error'); // 400
 const AuthError = require('../errors/auth_error'); // 401
 const ConflictError = require('../errors/conflict_error'); // 409
-const NotFoundError = require('../errors/not_found_error'); // 404
-
-const { NODE_ENV } = process.env;
-
-const { JWT_SECRET = 'secret' } = process.env; // подпись
-
+const NotFoundError = require('../errors/not_found_error');
+// 404
 
 const getUser = (req, res, next) => User.findById(req.user._id) // req.user._id?
   .orFail(new NotFoundError('Юзер по заданному ID отсутствует в БД.'))
@@ -32,18 +30,15 @@ const createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, email, password: hash,
     }))
-    .then((user) => {
-      res.send(user);
-    })
+    .then((user) => res.status(201)
+      .send({ message: `Пользователь ${user.email} успешно зарегестрирован` }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new DataError('Неверный запрос или данные.'));
-      } else if (err.name === 'MongoError' && err.code === 11000) {
-        next(new ConflictError('Данный почтовый ящик уже используется.'));
-      } else {
-        next(err);
+      if (err.code === 11000) {
+        throw new ConflictError('Такой пользователь уже существует.');// ерр на дубликат в бд
       }
-    });
+      throw err;
+    })
+    .catch(next);
 };
 
 const updateUser = (req, res, next) => {
@@ -57,14 +52,13 @@ const updateUser = (req, res, next) => {
       return res.status(200).send(user);
     })
     .catch((err) => {
-      if (err.name === 'ValidationError' || err.name === 'CastError') {
-        next(new DataError('Неверный запрос или данные.'));
+      if (err.code === 11000) {
+        next(new ConflictError('Данные заняты другим пользователем.'));
       } else {
         next(err);
       }
     });
 };
-
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -73,20 +67,19 @@ const login = (req, res, next) => {
     .then((user) => {
       const token = jwt.sign(
         // передаем в пейлоуд айди юзера и подпись
-        { _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'secret', { expiresIn: '7d' },
+        { _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'letsdestroythem', { expiresIn: '7d' },
       );
       res.cookie('jwt', token, {
-        //httpOnly: true,
-        //sameSite: 'None',
-        //secure: true,
-      }).end(res.send({ message: 'Записано.' }));
+        // httpOnly: true,
+        // sameSite: 'None',
+        // secure: true,
+      }).end(res.send({ message: 'Вы успешно залогинились.' }));
       // console.log(res.cookie);
       // .send({ token });
     })
     .catch(() => next(new AuthError('Неверный логин либо пароль')));
 };
 
-
 module.exports = {
-   getUser, createUser, updateUser, login
+  getUser, createUser, updateUser, login,
 };
