@@ -20,6 +20,9 @@ const corsOptions = {
     'http://localhost:3000',
     'http://localhost:3001',
     'http://daru13.back.nomoredomains.icu',
+    'https://daru13.back.nomoredomains.icu',
+    'http://daru13.frontend.nomoredomains.icu',
+    'https://daru13.frontend.nomoredomains.icu',
   ],
   credentials: true,
 };
