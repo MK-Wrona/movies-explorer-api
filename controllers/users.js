@@ -69,7 +69,11 @@ const login = (req, res, next) => {
         // передаем в пейлоуд айди юзера и подпись
         { _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'letsdestroythem', { expiresIn: '7d' },
       );
-      res.status(200).send({ token });
+      res.cookie('jwt', token, {
+        // httpOnly: true,
+        // sameSite: 'None',
+        // secure: true,
+      }).status(200).send({ message: 'Вы успешно залогинились.' });
       // console.log(res.cookie);
       // .send({ token });
     })
