@@ -23,6 +23,11 @@ const corsOptions = {
   origin: [
     'http://localhost:3000',
     'http://localhost:3001',
+    'https://daru13.back.nomoredomains.icu',
+    'http://daru13.back.nomoredomains.icu',
+    'https://daru13.front.nomoredomains.icu',
+    'http://daru13.front.nomoredomains.icu',
+
   ],
   credentials: true,
 };
