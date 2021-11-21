@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
 const limiter = require('./middlewares/rate_limiter');
@@ -18,11 +19,20 @@ mongoose.connect(DB_URL, {
   useUnifiedTopology: true,
 });
 
+const corsOptions = {
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+  ],
+  credentials: true,
+};
+
 // middlewares
 app.use(limiter);
 app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
+app.use(cors(corsOptions));
 app.use(requestLogger);
 
 app.use(router);
