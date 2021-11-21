@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const helmet = require('helmet');
 const { errors } = require('celebrate');
 const cookieParser = require('cookie-parser');
+const cors = require('cors');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const router = require('./routes/index');
 const limiter = require('./middlewares/rate_limiter');
@@ -12,6 +13,16 @@ const errHandler = require('./middlewares/err_handler');
 const { DB_URL } = require('./config'); // jwt-key \ db url moved to config_set
 
 const { PORT = 3000 } = process.env;
+
+const corsOptions = {
+  origin: [
+    'http://193.32.219.227',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://daru13.back.nomoredomains.icu',
+  ],
+  credentials: true,
+};
 
 mongoose.connect(DB_URL, {
   useNewUrlParser: true,
@@ -24,7 +35,7 @@ app.use(express.json());
 app.use(helmet());
 app.use(cookieParser());
 app.use(requestLogger);
-
+app.use(cors(corsOptions));
 app.use(router);
 
 // логгер + централизованный обработчик
