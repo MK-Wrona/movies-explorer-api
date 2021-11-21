@@ -16,13 +16,13 @@ const { PORT = 3000 } = process.env;
 
 const corsOptions = {
   origin: [
-    'http://193.32.219.227',
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'http://daru13.back.nomoredomains.icu',
-    'https://daru13.back.nomoredomains.icu',
-    'http://daru13.frontend.nomoredomains.icu',
-    'https://daru13.frontend.nomoredomains.icu',
+    'http://193.32.219.227/',
+    'http://localhost:3000/',
+    'http://localhost:3001/',
+    'http://daru13.back.nomoredomains.icu/',
+    'https://daru13.back.nomoredomains.icu/',
+    'http://daru13.frontend.nomoredomains.icu/',
+    'https://daru13.frontend.nomoredomains.icu/',
   ],
   credentials: true,
 };
