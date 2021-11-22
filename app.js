@@ -15,9 +15,17 @@ const { DB_URL } = require('./config'); // jwt-key \ db url moved to config_set
 const { PORT = 3000 } = process.env;
 
 const corsOptions = {
-  origin:
+  origin: [
+    'http://193.32.219.227',
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://daru13.back.nomoredomains.icu',
+    'https://daru13.back.nomoredomains.icu',
     'http://daru13.frontend.nomoredomains.icu',
+    'https://daru13.frontend.nomoredomains.icu',
+  ],
   credentials: true,
+  // headers: 'Access-Control-Allow-Headers: Content-Type',
 };
 
 mongoose.connect(DB_URL, {
