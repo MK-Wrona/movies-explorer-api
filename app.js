@@ -28,7 +28,7 @@ const corsOptions = {
   // headers: ['Access-Control-Allow-Headers : Content-Type'],
 
 };
-console.log(corsOptions);
+console.log([corsOptions]);
 
 app.use((req, res) => {
   const { method } = req;
