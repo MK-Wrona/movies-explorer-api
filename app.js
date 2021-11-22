@@ -29,11 +29,12 @@ const corsOptions = {
 
 };
 
-app.use((req, res, next) => {
+app.use((req, res) => {
   const { method } = req;
   const requestHeaders = req.headers['access-control-request-headers'];
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Headers', requestHeaders);
+    res.status(200);
   }
   return res.end();
 });
