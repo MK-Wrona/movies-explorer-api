@@ -25,7 +25,7 @@ const corsOptions = {
     'https://daru13.frontend.nomoredomains.icu',
   ],
   credentials: true,
-  // headers: 'Access-Control-Allow-Headers: Content-Type',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
 
 mongoose.connect(DB_URL, {
