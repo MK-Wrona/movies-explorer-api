@@ -33,10 +33,8 @@ console.log(corsOptions);
 app.use((req, res) => {
   const { method } = req;
   const requestHeaders = req.headers['access-control-request-headers'];
-  console.log(corsOptions);
   if (method === 'OPTIONS') {
     res.header('Access-Control-Allow-Headers', requestHeaders);
-    res.status(200);
   }
   return res.end();
 });
