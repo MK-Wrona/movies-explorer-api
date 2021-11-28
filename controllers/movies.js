@@ -6,7 +6,8 @@ const NotFoundError = require('../errors/not_found_error'); // 404
 
 // получить фильмы
 const getMovies = (req, res, next) => {
-  Movie.find({})
+  const { user: { _id } } = req;
+  Movie.find({ owner: _id })
     .then((movie) => {
       // получили и сразу отправили юзеру
       res.send(movie);
